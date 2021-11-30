@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_c4028932_852b_4187_8c01_5773ae102b43_Output_Payload = {| paymentID: String |}
+
