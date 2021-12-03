@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule
-  xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
-  xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-  xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
-  xmlns="http://www.mulesoft.org/schema/mule/core"
-  xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
-  xmlns:http="http://www.mulesoft.org/schema/mule/http"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-  xsi:schemaLocation="
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd 
@@ -24,40 +24,47 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
     http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
     http://www.mulesoft.org/schema/mule/ee/core 
     http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-  "
->
- 
-  <flow name="api-main">
-    <http:listener
-      config-ref="apiHttpListenerConfig"
-      path="/api/${api.majorVersion}/*"
-    >
-      <http:response statusCode="#[vars.httpStatus default 200]">
-        <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
-      </http:response>
-      <http:error-response statusCode="#[vars.httpStatus default 500]">
-        <http:body><![CDATA[#[payload]]]></http:body>
-        <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
-      </http:error-response>
-    </http:listener>
-    <apikit:router config-ref="apiConfig" />
-    <error-handler ref="api-error-handler" />
- 
-  </flow>
-  <flow name="put:\tickets\(PNR)\checkin:application\json:api-config">
-    <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
-      <ee:variables>
-        <ee:set-variable variableName="PNR">attributes.uriParams.'PNR'</ee:set-variable>
-      </ee:variables>
-    </ee:transform>
-    <flow-ref doc:name="check-in-by-pnr" doc:id="8981e790-af2f-4b88-b2f4-203be54f922b" name="check-in-by-pnr" />
-  </flow>
-  <flow name="put:\tickets\(PNR)\paymentApproval:application\json:api-config">
-    <ee:transform>
-      <ee:variables>
-        <ee:set-variable variableName="PNR">attributes.uriParams.'PNR'</ee:set-variable>
-      </ee:variables>
-    </ee:transform>
-    <flow-ref doc:name="Flow Reference" doc:id="94bcc6bb-31a9-4a97-83c6-b74af6d147da" name="payment-approval-by-pnr" />
-  </flow>
+  ">
+
+	<flow name="api-main">
+		<http:listener config-ref="apiHttpListenerConfig"
+			path="/api/${api.majorVersion}/*">
+			<http:response
+				statusCode="#[vars.httpStatus default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response
+				statusCode="#[vars.httpStatus default 500]">
+				<http:body><![CDATA[#[payload]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<apikit:router config-ref="apiConfig" />
+		<error-handler ref="api-error-handler" />
+
+	</flow>
+	<flow
+		name="put:\tickets\(PNR)\checkin:application\json:api-config">
+		<ee:transform
+			xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
+			<ee:variables>
+				<ee:set-variable variableName="PNR">attributes.uriParams.'PNR'
+				</ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="check-in-by-pnr"
+			doc:id="8981e790-af2f-4b88-b2f4-203be54f922b" name="check-in-by-pnr" />
+	</flow>
+	<flow
+		name="put:\tickets\(PNR)\paymentApproval:application\json:api-config">
+		<ee:transform>
+			<ee:variables>
+				<ee:set-variable variableName="PNR">attributes.uriParams.'PNR'
+				</ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<flow-ref doc:name="Flow Reference"
+			doc:id="94bcc6bb-31a9-4a97-83c6-b74af6d147da"
+			name="payment-approval-by-pnr" />
+	</flow>
 </mule>
