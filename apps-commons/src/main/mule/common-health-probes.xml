@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+
+
+
+	<flow
+		name="api-alive"
+		doc:id="5d51936e-8489-4690-91f2-4a92640ade6e">
+		<http:listener
+			doc:name="GET: /alive"
+			doc:id="0b596933-9d1e-4d48-a106-37e7c8921ba1"
+			config-ref="apiHttpsListenerConnectorConfig"
+			path="/alive"
+			allowedMethods="GET">
+			<http:response
+				statusCode="200"
+				reasonPhrase="API ALIVE" />
+			<http:error-response
+				statusCode="503"
+				reasonPhrase="API NOT ALIVE">
+				<http:body><![CDATA[DOWN]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<set-payload
+			value="UP"
+			doc:name="Set Payload"
+			doc:id="94099dd5-e842-4cc3-9015-df7738ac6283" />
+	</flow>
+
+
+
+	<flow
+		name="api-ready"
+		doc:id="96207587-c743-4b5e-8b5d-c90e9dabb7cf">
+		<http:listener
+			doc:name="GET: /ready"
+			doc:id="9fc23b6d-ca84-4937-83f5-c317f13cc20a"
+			config-ref="apiHttpsListenerConnectorConfig"
+			path="/ready"
+			allowedMethods="GET">
+			<http:response
+				statusCode="200"
+				reasonPhrase="API READY" />
+			<http:error-response
+				statusCode="503"
+				reasonPhrase="API NOT READY">
+				<http:body><![CDATA[DOWN]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<flow-ref
+			doc:name="check-all-dependencies-are-alive"
+			doc:id="5105cbb0-ac1e-47b9-a0a5-56e67711fbfd"
+			name="check-all-dependencies-are-alive" />
+		<set-payload
+			value="#[payload]"
+			doc:name="Set Payload"
+			doc:id="96f33637-02d4-48bc-9e8d-3346d7572838" />
+	</flow>
+
+
+
+
+</mule>
