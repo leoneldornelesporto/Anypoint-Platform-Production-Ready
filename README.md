@@ -1,1 +1,0 @@
-# Anypoint-Platform-Production-Ready
