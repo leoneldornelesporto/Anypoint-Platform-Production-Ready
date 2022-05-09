@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+
+
+
+	<flow
+		name="get-passengers"
+		doc:id="54eeb966-4f52-4b64-992f-07c2483aec43">
+		<http:listener
+			doc:name="Copy_of_GET: /flights"
+			doc:id="47640752-dd57-49b9-9bd4-b851ab0bf615"
+			config-ref="HTTP_Listener_config"
+			path="/passengers"
+			allowedMethods="GET" />
+		<set-payload
+			value='#["retrieving list of passengers from PO-SAPI...."]'
+			doc:name="Copy_of_Set Payload"
+			doc:id="0a81b85d-da14-45e7-b011-d073129437bf" />
+		<logger
+			level="INFO"
+			doc:name="Copy_of_Logger"
+			doc:id="3a252dc1-dd8d-4447-97c3-0c6ac32068f9"
+			message="#[payload]" />
+	</flow>
+
+
+
+</mule>
