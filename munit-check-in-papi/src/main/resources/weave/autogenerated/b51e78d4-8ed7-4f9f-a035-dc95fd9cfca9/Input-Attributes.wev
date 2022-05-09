@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_b51e78d4_8ed7_4f9f_a035_dc95fd9cfca9_Input_Attributes = {| uriParams: {| PNR: String |} |}
+

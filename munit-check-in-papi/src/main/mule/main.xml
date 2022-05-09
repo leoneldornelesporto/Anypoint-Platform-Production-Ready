@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="0ad8d8d9-0334-4114-878a-995a655314ab" basePath="/api/v1/tickets" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="check-in-by-pnr" doc:id="7e412cc9-8590-4334-af4b-ea3c91cb103c">
+		<http:listener doc:name="PUT: /{PNR}/checkin" doc:id="6f4df0c5-13fd-484a-a1d8-7356a43122cc" config-ref="HTTP_Listener_config" path="/{PNR}/checkin" allowedMethods="PUT">
+			<http:response>
+				<http:body><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:response>
+		</http:listener>
+		<set-variable value="#[message.attributes.uriParams.PNR]" doc:name="Set Variable" doc:id="ec94d481-875f-4c45-8ab3-0e3be4c2ac84" variableName="PNR" />
+		<logger level="INFO" doc:name="Logger" doc:id="1adc7f2d-a996-4e64-8352-d9f643b15258" message='#[output text/plain ---&#10;"\n\n&#10;Passenger last name: $(message.payload.lastName) Record Locator: $(vars.PNR)&#10;"]' />
+		<flow-ref doc:name="flights-management-sapi" doc:id="66ddc650-bb76-49bf-be2e-a523512270af" name="flights-management-sapi" />
+		<flow-ref doc:name="passenger-data-sapi" doc:id="294dc702-bccc-41ee-a425-ba91e185414a" name="passenger-data-sapi" />
+		<flow-ref doc:name="pay-pal-sapi" doc:id="34acd974-76f6-4880-901c-843b27c6b048" name="pay-pal-sapi" />
+		<ee:transform doc:name="Transform Message" doc:id="7293c8c5-f048-4471-b584-88b3eeb433f9">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"paymentId": "PAY-1AKD7482FAB95TATKO"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="pay-pal-sapi" doc:id="f41fcd65-0ea7-4c7b-b191-8501401fd28c" >
+		<logger level="INFO" doc:name="Logger" doc:id="5943ad01-c4d5-4c4f-a105-756035d0f4fb" />
+		<http:request method="GET" doc:name="Fake Request" doc:id="b5d627ba-b7ad-44b8-8609-0e5356834192" url="http://128.12.12.99:8989/payment"/>
+		<ee:transform doc:name="Transform Message" doc:id="5cc64303-2942-415e-a56a-a801d1a5e3e3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	status: 'PAID'
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="passenger-data-sapi" doc:id="ddbcfc03-29f8-43bb-bf86-705a2b665ec2" >
+		<logger level="INFO" doc:name="Logger" doc:id="068f4346-9ff7-4503-8069-a6abd2d92278" />
+	</flow>
+	<flow name="flights-management-sapi" doc:id="74cd3f2c-7847-44a7-a196-e1799f79c669" >
+		<logger level="INFO" doc:name="Logger" doc:id="2c271a2d-b273-451d-a690-24972c816ba4" />
+	</flow>
+</mule>

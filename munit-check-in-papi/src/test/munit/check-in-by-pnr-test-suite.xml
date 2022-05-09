@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="check-in-by-pnr-test-suite.xml" />
+	<munit:test name="check-in-by-pnr-happy-path-test" doc:id="a95d5f4d-b631-4ad2-aad3-9f29245f5c96" description="This testcase calls check-in-pnr flows to test various validation">
+		<munit:behavior>
+			<flow-ref doc:name="Flow Reference" doc:id="6c0fe9f6-0915-42d7-8f83-5df43b75c18c" name="mock-all-flow-refs-and-http-requests" />
+			<flow-ref doc:name="Flow Reference" doc:id="2de9dcb7-9b3b-4d3c-b28d-4246c63f7c71" name="spy-on-all-flow-refs" />
+		</munit:behavior>
+		<munit:execution>
+			<munit:set-event doc:name="Set Event add sample payload and URI Params" doc:id="4a371e3c-766b-4203-8854-a5ec0cbdca48">
+				<munit:payload value='{&#10;    "lastName":"Porto",&#10;    "numBags":2&#10;}' mediaType="application/json" />
+				<munit:attributes value='#[{uriParams: {PNR: "PNR1234"}}]' />
+			</munit:set-event>
+			<flow-ref doc:name="check-in-by-pnr" doc:id="26c35b39-e6ac-46bb-aee0-7162e66b3bd8" name="check-in-by-pnr" />
+		</munit:execution>
+		<munit:validation>
+			<flow-ref doc:name="all-validations-for-payment-id" doc:id="6616222c-7c73-4c16-9f34-de6446de6276" name="all-validations-for-payment-id" />
+			<flow-ref doc:name="verify-that-all-sapi-invoked-once" doc:id="4411dff3-5476-4ec6-a78c-530c28e449c9" name="verify-that-all-sapi-invoked-once" />
+		</munit:validation>
+	</munit:test>
+	<sub-flow name="spy-on-all-flow-refs" doc:id="793925aa-cc61-46b9-a892-ce9c0bb3891a" >
+		<munit-tools:spy doc:name="Spy when processor = flowRef to pay-pal-sapi" doc:id="2bad9695-cc3d-49d0-9ed3-f0e770106e86" processor="flow-ref">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="pay-pal-sapi" attributeName="name" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call>
+					<munit-tools:assert-that doc:name="Assert that" doc:id="108b6f95-9999-41b4-a7b0-dd05aaf9b294" expression="#[vars.PNR]" is='#[MunitTools::equalTo("PNR1234")]' />
+				</munit-tools:before-call>
+				<munit-tools:after-call>
+					<munit-tools:assert-that doc:name="Assert that" doc:id="bae71be3-6625-43b7-99f4-02f5959250d1" expression="#[payload.status]" is='#[MunitTools::equalTo("PAID")]' />
+				</munit-tools:after-call>
+			</munit-tools:spy>
+	</sub-flow>
+	<sub-flow name="mock-all-flow-refs-and-http-requests" doc:id="b51e78d4-8ed7-4f9f-a035-dc95fd9cfca9" >
+		<munit-tools:mock-when doc:name="Mock when processor - flowRef to flights-management-sapi" doc:id="c1ec7a61-b541-4442-947f-a6ccb029a02a" processor="flow-ref">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="flights-management-sapi" attributeName="name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value="#[{ }]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		<munit-tools:mock-when doc:name="Mock when processor - flowRef to passenger-data-sapi" doc:id="8492a46f-b72f-462e-a8c1-6efc3f327719" processor="flow-ref">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="passenger-data-sapi" attributeName="name" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value="#[{ }]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		<munit-tools:mock-when doc:name="Mock when processor - httpRequest" doc:id="c58b114d-9782-4c7a-a09d-ec2d0387229f" processor="http:request">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="GET" attributeName="method" />
+					<munit-tools:with-attribute whereValue="Fake Request" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="http://128.12.12.99:8989/payment" attributeName="url" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return>
+					<munit-tools:payload value="#[{ }]" />
+					<munit-tools:attributes value="#[{ httpStatus: 200}]" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+	</sub-flow>
+	<sub-flow name="verify-that-all-sapi-invoked-once" doc:id="89c197a0-6c30-4429-b693-be502e9c9648" >
+		<munit-tools:verify-call doc:name="Verify call when flowref = flights-management-sapi" doc:id="a548da07-0c27-4733-b43e-eabf47bb6586" processor="flow-ref" times="1">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="flights-management-sapi" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		<munit-tools:verify-call doc:name="Verify call when flowref = passenger-data-sapi" doc:id="94412fcd-4cd4-4f52-8624-5410c735bebf" processor="flow-ref" times="1">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="passenger-data-sapi" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		<munit-tools:verify-call doc:name="Verify call when flowref = pay-pal-sapi" doc:id="eebebcfb-a5a7-4ca6-8d80-25d3de7c3231" processor="flow-ref" times="1">
+				<munit-tools:with-attributes>
+					<munit-tools:with-attribute whereValue="pay-pal-sapi" attributeName="name" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+	</sub-flow>
+	<sub-flow name="all-validations-for-payment-id" doc:id="f1347a84-3f01-4ada-8acc-2bdd21270079" >
+		<munit-tools:assert-equals doc:name="Assert equals" doc:id="1494c5da-6c5d-47d6-be10-da3a5140c4f7" actual="#[payload]" expected="#[import * from testData --- remitId]" message='#["FAILED: Expected Payment ID to be PAY-1AKD7482FAB95TATKO, but found $(payload.paymentId) instead!!"]' />
+		<munit-tools:assert doc:name="Assert expression" doc:id="73a97725-43a5-44c4-9e4b-bf15e6f65628">
+				<munit-tools:that><![CDATA[#[import * from dw::test::Asserts 
+ ---
+payload must [
+	notBeNull(),
+	beObject(),
+	not ($.paymentId is Null)
+]]]]></munit-tools:that>
+			</munit-tools:assert>
+		<munit-tools:assert-that doc:name="Assert that" doc:id="3d6f3867-5f62-40e2-b990-229fc5e02523" expression="#[payload]" is='#[MunitTools::equalTo({paymentId: "PAY-1AKD7482FAB95TATKO"})]' />
+		<munit-tools:assert-that doc:name="Assert that" doc:id="7bdefa6a-5791-4e36-80b4-f991e04ad453" is='#[//MunitTools::both(MunitTools::notNullValue(), MunitTools::equalTo("PAY-1AKD7482FAB95TATKO"))&#10;import * from MunitTools&#10;---&#10;both(&#10;	notNullValue(),&#10;	equalTo("PAY-1AKD7482FAB95TATKO")&#10;)]' expression="#[payload.paymentId]" message="FAILED: payment ID did not match" />
+	</sub-flow>
+
+
+</mule>

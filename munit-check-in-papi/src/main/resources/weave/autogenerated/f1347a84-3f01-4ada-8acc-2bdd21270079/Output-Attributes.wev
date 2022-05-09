@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_f1347a84_3f01_4ada_8acc_2bdd21270079_Output_Attributes = {| uriParams: {| PNR: String |} |}
+
