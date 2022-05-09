@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<import doc:name="Import" doc:id="ce560dc9-ec15-4dde-9933-82a09defe265" file="common-health-probes.xml" />
+	<sub-flow name="check-all-dependencies-are-alive" doc:id="c8bb282a-c944-47ed-996f-842173eb6076">
+		<set-payload value="UP" doc:name="Set Payload" doc:id="ca95f562-2f67-416f-9678-bf75311e80ba" />
+	</sub-flow>
+	
+	
+	
+	
+</mule>

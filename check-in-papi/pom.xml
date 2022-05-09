@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.mulesoft.training.anyairline</groupId>
+		<artifactId>common-parent-pom</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../parent-pom/pom.xml</relativePath>
+	</parent>
+	<groupId>com.mulesoft.training.anyairline</groupId>
+	<artifactId>check-in-papi</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<packaging>mule-application</packaging>
+
+	<name>check-in-papi</name>
+
+	<properties>
+		<!-- Check-in PAPI Rest Connector Properties -->
+		<connector.groupId>0b6fd76a-f919-4c44-8e17-f200dd662ad4</connector.groupId>
+		<connector.artifactId>check-in-papi</connector.artifactId>
+		<connector.version>1.0.0</connector.version>
+		<api.layer>${api.layer.papi}</api.layer>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.mule.tools.maven</groupId>
+				<artifactId>mule-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<!-- Check-in PAPI RAML Spec -->
+		<dependency>
+			<groupId>${connector.groupId}</groupId>
+			<artifactId>${connector.artifactId}</artifactId>
+			<version>${connector.version}</version>
+			<classifier>raml</classifier>
+			<type>zip</type>
+		</dependency>
+		<!-- Mule-project specific dependencies -->
+		<dependency>
+			<groupId>org.mule.connectors</groupId>
+			<artifactId>mule-http-connector</artifactId>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.connectors</groupId>
+			<artifactId>mule-sockets-connector</artifactId>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>org.mule.modules</groupId>
+			<artifactId>mule-apikit-module</artifactId>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.modules</groupId>
+			<artifactId>mule-secure-configuration-property-module</artifactId>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+		<dependency>
+			<groupId>com.mulesoft.training.anyairline</groupId>
+			<artifactId>apps-commons</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<classifier>mule-plugin</classifier>
+		</dependency>
+	</dependencies>
+</project>

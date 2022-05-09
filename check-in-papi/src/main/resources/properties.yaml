@@ -1,0 +1,15 @@
+# Environment independent properties
+
+# HTTPS Connector Properties
+https:
+  host: "localhost"
+  port: "7082"
+  
+# Check-in Process API Spec Properties
+# resource::0b6fd76a-f919-4c44-8e17-f200dd662ad4:check-in-papi:1.0.0:raml:zip:api.raml
+api:
+  groupId: "${connector.groupId}"
+  artifactId: "${connector.artifactId}"
+  version: "${connector.version}"
+  spec: "resource::${api.groupId}:${api.artifactId}:${api.version}:raml:zip:api.raml"
+  majorVersion: "v1"

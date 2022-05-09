@@ -1,0 +1,16 @@
+# Properties meant to be used in "dev" environment
+
+# HTTPS Connector Properties
+https:
+  host: "0.0.0.0"
+  port: "8082"
+  
+# SSL/TLS Properties
+tls.keystore:
+  type: "pkcs12"
+  path: "certs/check-in-papi-dev.p12"
+  alias: "server"
+
+# API ID for Autodiscovery
+api:
+  id: "17784506"
