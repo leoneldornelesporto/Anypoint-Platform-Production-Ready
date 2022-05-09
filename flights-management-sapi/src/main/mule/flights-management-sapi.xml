@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+
+
+
+
+	<flow
+		name="get-flights"
+		doc:id="9cd5b371-ed96-4a5e-892d-6b3a798ab09b">
+		<http:listener
+			doc:name="GET: /flights"
+			doc:id="0f541bd2-2ce6-4a9d-8a58-d40758053855"
+			config-ref="HTTP_Listener_config"
+			path="/flights"
+			allowedMethods="GET" />
+		<set-payload
+			value='#["retrieving list of flights from FM-SAPI...."]'
+			doc:name="Set Payload"
+			doc:id="467cb3d9-f420-41a7-94bd-5e26c8507bcd" />
+		<logger
+			level="INFO"
+			doc:name="Logger"
+			doc:id="231a4806-6e94-4784-949d-543e88d9e450"
+			message="#[payload]" />
+	</flow>
+	
+	
+	
+	
+</mule>
