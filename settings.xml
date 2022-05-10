@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<settings>
+    <servers>
+	<!-- 
+	<server>
+        	<id>anypoint-exchange-v2</id>
+	        <username>YOUR_AP_UID</username>
+        	<password>YOUR_AP_PWD</password>
+	</server>
+	-->
+	<server>
+        	<id>anypoint-exchange-v2</id>
+	        <username>~~~Client~~~</username>
+        	<password>27fafbf8006a44deb81b4733f487f2a7~?~2B24CA04c8204Ec8A551B9E51b9588Db</password>
+	</server>
+    </servers>
+</settings>
