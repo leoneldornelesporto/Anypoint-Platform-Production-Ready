@@ -1,0 +1,117 @@
+Organization:
+Name: DevProd
+Organization ID => groupId: 0b6fd76a-f919-4c44-8e17-f200dd662ad4
+client_id=4b2a9759a8c643748aa36e3e35a64bf0
+client_secret=452f006b64474677B0005Fd0C2D56c3F
+
+client_id=
+client_secret=
+
+-M-Danypoint.platform.client_id=
+-M-Danypoint.platform.client_secret=
+
+
+-M-Danypoint.platform.client_id=4b2a9759a8c643748aa36e3e35a64bf0
+-M-Danypoint.platform.client_secret=452f006b64474677B0005Fd0C2D56c3F
+-M-Danypoint.platform.gatekeeper=disabled
+-M-Dencrypt.key=secure12345
+
+
+baseUri: https://leonel-check-in-papi-dev.us-e2.cloudhub.io/api/v1
+console: https://leonel-check-in-papi-dev.us-e2.cloudhub.io/console/v1
+
+App Name:
+
+dev:  leonel-check-in-papi-dev
+test: leonel-check-in-papi-test
+prod: leonel-check-in-papi
+
+API Autodiscovery ID:
+dev:  17784506
+test: 17785327
+prod: 17785328
+
+Connected Apps: MyConnectedAPP
+ca_client_id=440fdcde81f748b992c601d40e8d8459
+ca_client_secret=3bB143FB21A04E318a9ea7dF26fF2113
+
+
+<cloudHubDeployment>
+	<server>cloudhub</server>
+	<environment>dev</environment>
+	<region>us-east-2</region>
+	<muleVersion>${app.runtime}</muleVersion>
+	<applyLatestRuntimePatch>true</applyLatestRuntimePatch>
+	<workers>1</workers>
+	<workerType>MICRO</workerType>
+	<objectStoreV2>true</objectStoreV2>
+	<applicationName>leonel-${project.artifactId}-dev</applicationName>
+	<deploymentTimeout>600000</deploymentTimeout>
+	<properties>
+	<anypoint.platform.client_id>${ap.client_id}</anypoint.platform.client_id>
+	<anypoint.platform.client_secret>${ap.client_secret}</anypoint.platform.client_secret>
+	</properties>
+</cloudHubDeployment>
+					
+
+Windows:
+set client_id=4b2a9759a8c643748aa36e3e35a64bf0
+set client_secret=452f006b64474677B0005Fd0C2D56c3F
+set ca_client_id=440fdcde81f748b992c601d40e8d8459
+set ca_client_secret=3bB143FB21A04E318a9ea7dF26fF2113
+
+Command Deploy in DEV
+
+mvn clean package deploy -DmuleDeploy -Dap.client_id=%client_id% -Dap.client_secret=%client_secret% -Dap.ca.client_id=%ca_client_id% -Dap.ca.client_secret=%ca_client_secret% -Dencrypt.key=secure12345 -Ddeployment.env=dev
+
+Command Deploy in TEST
+
+mvn clean package deploy -DmuleDeploy -Dap.client_id=%client_id% -Dap.client_secret=%client_secret% -Dap.ca.client_id=%ca_client_id% -Dap.ca.client_secret=%ca_client_secret% -Dencrypt.key=secure12345 -Ddeployment.env=test
+
+Command Deploy in PROD
+
+mvn clean package deploy -DmuleDeploy -Dap.client_id=%client_id% -Dap.client_secret=%client_secret% -Dap.ca.client_id=%ca_client_id% -Dap.ca.client_secret=%ca_client_secret -Dencrypt.key=secure12345 -Ddeployment.env=prod -Ddeployment.suffix=
+
+Mac:
+export client_id=abd88d0e6c5e4142b5ab6c042085ec89
+export client_secret=31B52B2fC27241b59f406E17F0902D3d
+export ca_client_id=27fafbf8006a44deb81b4733f487f2a7
+export ca_client_secret=2B24CA04c8204Ec8A551B9E51b9588Db
+
+Command Deploy in DEV
+
+mvn clean package deploy -DmuleDeploy -Dap.client_id=$client_id -Dap.client_secret=$client_secret -Dap.ca.client_id=$ca_client_id -Dap.ca.client_secret=$ca_client_secret -Dencrypt.key=secure12345 -Ddeployment.env=dev
+
+Command Deploy in TEST
+
+mvn clean package deploy -DmuleDeploy -Dap.client_id=$client_id -Dap.client_secret=$client_secret -Dap.ca.client_id=$ca_client_id -Dap.ca.client_secret=$ca_client_secret -Dencrypt.key=secure12345 -Ddeployment.env=test
+
+Command Deploy in PROD
+
+mvn clean package deploy -DmuleDeploy -Dap.client_id=$client_id -Dap.client_secret=$client_secret -Dap.ca.client_id=$ca_client_id -Dap.ca.client_secret=$ca_client_secret -Dencrypt.key=secure12345 -Ddeployment.env=prod -Ddeployment.suffix=
+
+#GERAR CERTIFICADO
+
+keytool -genkeypair -keystore check-in-papi-dev.p12 -storetype pkcs12 -storepass mule12345 -alias server -keyalg RSA -validity 365
+
+Formatar XML
+control+shift+f
+
+#Comandos no Maven
+mvn clean validate
+mvn clean compile
+mvn clean -> a pasta target e limpada
+mvn clean package -> Cria o jar da aplicação
+mvn clean test -> não criar o jar
+
+##Deploy
+mvn clean deploy -DmuleDeploy -DskipTests=true -Dmule.env=dev -Danypoint.platform.client_id=58886a20aa6f4790b6fbd53b48b75c5e -Danypoint.platform.client_secret=37129b169c1A4a6287964Ad65E424103 
+mvn clean deploy -DmuleDeploy -DskipTests=true -Dmule.env=qa -Danypoint.platform.client_id=2b357803f92c40e7ae27c7496345ec3f -Danypoint.platform.client_secret=7c315ab51a0e4a269990Be004A509263
+mvn clean deploy -DmuleDeploy -DskipTests=true -Dmule.env=prod -Danypoint.platform.client_id=fbd9a30ac3924111b856f90a2a8f9de8 -Danypoint.platform.client_secret=2b0E88a120614e66a9812DAa574A4A1c
+
+##Decode e Encode dos properties.yaml
+https://docs.mulesoft.com/mule-runtime/4.4/secure-configuration-properties
+
+java -cp C:\Users\leonel.d.porto\Downloads\secure-properties-tool.jar com.mulesoft.tools.SecurePropertiesTool file encrypt Blowfish CBC secure12345 properties-dev-secure.yaml temp.yaml
+
+move /Y temp.yaml properties-dev-secure.yaml
